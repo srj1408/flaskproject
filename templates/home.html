@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Home</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Passion+One"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Oxygen"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+  </head>
+  <body style="background-color: #ccc">
+    <div class="container">
+      <div class="row main">
+        <div class="main-login main-center">
+          <h5>Enter the invoice data</h5>
+          <form action="{{ url_for('home') }}" method="post" autocomplete="off">
+            <div class="form-group">
+              <label for="item_name" class="cols-sm-2 control-label"
+                >Item name</label
+              >
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="item_name"
+                    id="item_name"
+                    placeholder="Enter the item name"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="quantity" class="cols-sm-2 control-label"
+                >Item Quantity</label
+              >
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="quantity"
+                    id="quantity"
+                    placeholder="Enter the item quantity"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="total_amount" class="cols-sm-2 control-label"
+                >Amount Paid</label
+              >
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="total_amount"
+                    id="total_amount"
+                    placeholder="Enter the amount paid in Rs"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="invoice_date" class="cols-sm-2 control-label"
+                >Invoice Date</label
+              >
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    name="invoice_date"
+                    id="invoice_date"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              {% with messages = get_flashed_messages() %} {% if messages %} {%
+              for message in messages %}
+              <div
+                class="alert alert-success alert-dismissible fade show"
+                role="alert"
+              >
+                {{ message }}
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="alert"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              {% endfor %} {% endif %} {% endwith %}
+              <input
+                type="submit"
+                value="Submit"
+                class="form-control btn btn-primary"
+                name=""
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </body>
+</html>
