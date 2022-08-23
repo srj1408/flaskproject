@@ -1,4 +1,4 @@
-from flask import Flask, request, session, redirect, url_for, render_template, flash, Response
+from flask import Flask, request, session, redirect, url_for, render_template, flash
 from flask.scaffold import F
 from fpdf import FPDF
 import psycopg2
@@ -6,14 +6,17 @@ import psycopg2.extras
 from werkzeug.security import generate_password_hash, check_password_hash
 import boto3
 import random
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 app = Flask(__name__)
-app.secret_key = 'suraj-jha'
+app.secret_key = os.getenv("SECRET_KEY")
 
-DB_HOST = "localhost"
-DB_NAME = "phase"
-DB_USER = "postgres"
-DB_PASS = "password"
+DB_HOST = os.getenv("DB_HOST")
+DB_NAME = os.getenv("DB_NAME")
+DB_USER = os.getenv("DB_USER")
+DB_PASS = os.getenv("DB_PASS")
 
 conn = psycopg2.connect(dbname = DB_NAME, user = DB_USER, password = DB_PASS, host = DB_HOST)
 
@@ -75,16 +78,22 @@ def home():
 @app.route('/login/', methods=['GET','POST'])
 def login():
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username VARCHAR(50) NOT NULL UNIQUE, password VARCHAR(150) NOT NULL)")
+    cursor.execute("TRUNCATE TABLE users")
+    password = os.getenv("password")
+    hashed_password = generate_password_hash(password)
+    cursor.execute("INSERT INTO users(username, password) VALUES(%s,%s)",("Suraj",hashed_password))
+
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = request.form['password']
 
         cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
         account = cursor.fetchone()
+        conn.commit()
         if account: 
             password_rs = account['password']
-            _hashed_password = generate_password_hash(password_rs)
-            if check_password_hash(_hashed_password, password):
+            if check_password_hash(password_rs, password):
                 session['loggedin'] = True
                 session['id'] = account['id']
                 session['username'] = account['username']
